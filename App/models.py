@@ -44,13 +44,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.phone
 
-    def has_perm(self, perm, obj=None):
-        return self.is_admin
 
-    def has_module_perms(self, app_label):
-        return self.is_admin
 
-class AdminProfile(models.Model):
+
+
+class Course(models.Model):
+    title = models.CharField(max_length=50)
+    descriptions = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Admin(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     permissions = models.TextField(blank=True, null=True)
@@ -58,20 +64,61 @@ class AdminProfile(models.Model):
     updated = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=500, blank=True, null=True)
 
-class WorkerProfile(models.Model):
+class Worker(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    job_title = models.CharField(max_length=100)
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    departments = models.ManyToManyField('Departments', related_name='worker')
+    course = models.ManyToManyField(Course, related_name='worker')
+    
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=500, blank=True, null=True)
 
-class StudentProfile(models.Model):
-    id = models.AutoField(primary_key=True)
+
+
+class Table(models.Model):
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    room = models.CharField(max_length=10)
+    # type = models.ForeignKey(TableType, on_delete=models.RESTRICT)
+    
+    descriptions = models.CharField(max_length=500, blank=True, null=True)
+
+
+
+class Group(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+    course = models.ForeignKey(Course, on_delete=models.RESTRICT)
+    teacher = models.ManyToManyField(Worker, related_name='teacher')
+    table = models.ForeignKey(Table, on_delete=models.RESTRICT)
+    created = models.DateField(auto_now_add=True)
+    updated = models.DateField(auto_now=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    price = models.CharField(max_length=15, blank=True, null=True)
+    descriptions = models.CharField(max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+
+    def __str__(self):
+        return self.start_time
+
+
+
+class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    major = models.CharField(max_length=100)
-    gpa = models.FloatField()
+    group = models.ManyToManyField('Group', related_name='student')
+    course = models.ManyToManyField(Course, related_name='student')
+    is_line = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    description = models.CharField(max_length=500, blank=True, null=True)
+    descriptions = models.CharField(max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.phone
+
+
+
