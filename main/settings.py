@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'drf_yasg',
+    
     
     
     
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     
     'App',
 ]
+AUTH_USER_MODEL = 'App.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
