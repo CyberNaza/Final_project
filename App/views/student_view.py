@@ -8,7 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 from ..models import User, Student
 from ..serializers import CreateStudentSerializer
 
-class AddStudentApiView(APIView):
+class StudentApiView(APIView):
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['user__phone', 'user__full_name']
