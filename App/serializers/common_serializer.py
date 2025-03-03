@@ -1,9 +1,50 @@
 from django.forms import ValidationError
 from rest_framework import serializers
-from ..models import Student, Parents, User, Group, Worker, Table, Course
+from ..models import Student, Parents, User, Group, Worker, Table, Course, TableType, Rooms
 from django.shortcuts import get_object_or_404
 from ..models.group import Table
 from rest_framework import serializers
+
+
+
+class TabelSerializer(serializers.ModelSerializer):
+    room = serializers.CharField()
+    type = serializers.CharField()
+    start_time = serializers.TimeField()
+    end_time = serializers.TimeField()
+
+    class Meta:
+        model = Table
+        fields = ['room', 'type', 'start_time', 'end_time', 'descriptions']
+
+    def create(self, validated_data):
+        room_id = validated_data.get('room')
+        type_id = validated_data.get('type')
+        start_time = validated_data.get('start_time')
+        end_time = validated_data.get('end_time')
+        descriptions = validated_data.get('descriptions')
+
+        type_instance = TableType.objects.get(id=type_id)
+        room_instance = Rooms.objects.get(id=room_id)
+
+        return Table.objects.create(
+            room=room_instance,
+            type=type_instance,
+            start_time=start_time,
+            end_time=end_time,
+            descriptions=descriptions
+        )
+
+    
+    
+
+
+
+
+
+
+
+
 
 
 class GroupSerializer(serializers.ModelSerializer):
