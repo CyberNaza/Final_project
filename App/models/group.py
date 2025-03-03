@@ -34,9 +34,8 @@ class Table(models.Model):
     room = models.ForeignKey(Rooms, on_delete=models.RESTRICT)
     type = models.ForeignKey(TableType, on_delete=models.RESTRICT)
     descriptions = models.CharField(max_length=500, blank=True, null=True)
-
     def __str__(self):
-        return self.start_time.__str__()+"  "+self.end_time.__str__()
+          return f"ID: {self.id} | {self.start_time} - {self.end_time}".__str__()
 
 class Group(models.Model):
     title = models.CharField(max_length=50, unique=True)
@@ -45,8 +44,7 @@ class Group(models.Model):
     table = models.ForeignKey(Table, on_delete=models.RESTRICT)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
+
     price = models.CharField(max_length=15, blank=True, null=True)
     descriptions = models.CharField(max_length=500, blank=True, null=True)
 

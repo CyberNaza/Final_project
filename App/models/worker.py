@@ -11,9 +11,9 @@ class Course(models.Model):
     descriptions = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return f"ID: {self.id} | {self.title}"
 
-
+    
 # Xodimlarning darajasini belgilash uchun
 class Departments(models.Model):
     title = models.CharField(max_length=50)
@@ -36,4 +36,4 @@ class Worker(models.Model):
     descriptions = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return self.user.phone
+        return f"ID: {self.id} | {self.user.phone}"

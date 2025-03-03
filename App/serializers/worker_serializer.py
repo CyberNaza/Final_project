@@ -11,7 +11,7 @@ from ..models import User, Worker
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["phone", "full_name", "password", "is_student"]
+        fields = ["phone", "full_name", "password", "is_teacher"]
         extra_kwargs = {"password": {"write_only": True}}
         ref_name = 'StudentUserSerializer'
 

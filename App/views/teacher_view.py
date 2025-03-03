@@ -7,8 +7,12 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import PageNumberPagination
 from ..models import User, Worker
 from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, CreateWorkerSerializer
+from rest_framework.permissions import IsAdminUser
 
 class TeacherApiView(APIView):
+    
+    permission_classes = [IsAdminUser]
+
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['user__phone', 'user__full_name']
