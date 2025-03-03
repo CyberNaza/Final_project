@@ -28,11 +28,6 @@ class WorkerSerializer(serializers.ModelSerializer):
 
 
 
-# class DepartmentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Departments
-#         fields = ['title']
-
 class CreateWorkerSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(write_only=True, required=True)
     password = serializers.CharField(write_only=True, required=True)
@@ -53,23 +48,19 @@ class CreateWorkerSerializer(serializers.ModelSerializer):
         department_titles = validated_data.pop('departments', [])
         course_titles = validated_data.pop('course', [])
 
-        # Convert titles to Department instances
         departments = []
         for title in department_titles:
             department, created = Departments.objects.get_or_create(title=title)
             departments.append(department)
 
-        # Convert titles to Course instances
         courses = []
         for title in course_titles:
             course, created = Course.objects.get_or_create(title=title)
             courses.append(course)
 
-        # Create User and Worker
         user = User.objects.create_user(phone=phone, password=password, full_name=full_name, is_teacher=True)
         teacher = Worker.objects.create(user=user)
 
-        # Assign departments and courses
         teacher.departments.set(departments)
         teacher.course.set(courses)
 
