@@ -28,7 +28,14 @@ class StudentApiView(APIView):
         serializer = CreateStudentSerializer(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+    @swagger_auto_schema(request_body=CreateStudentSerializer)
+    def put(self, request, student_id):
+        student = get_object_or_404(Student, id=student_id)
+        serializer = CreateStudentSerializer(student, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': True, 'detail': "Student account updated"}, status=status.HTTP_200_OK)
+        return Response({'status': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class ParentsApiView(APIView):
     permission_classes = [IsAdminUser]

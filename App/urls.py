@@ -6,6 +6,8 @@ from .views import TableListCreateView, TableRetrieveUpdateDestroyView, Departme
 urlpatterns = [
     path("workers/create/", TeacherApiView.as_view(), name='teacher-api'),
     path("student/create/", StudentApiView.as_view(), name='studnet-api'),
+    path('teachers/<int:teacher_id>/', TeacherApiView.as_view(), name='teacher-update'),
+    path('students/<int:student_id>/', StudentApiView.as_view(), name='student-update'),
 
 
     path('groups/', GroupView.as_view()), 

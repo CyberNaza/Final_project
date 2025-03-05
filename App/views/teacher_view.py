@@ -29,7 +29,17 @@ class TeacherApiView(APIView):
         teachers = Worker.objects.all()
         serializer = WorkerSerializer(teachers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
+  
+    @swagger_auto_schema(request_body=CreateWorkerSerializer)
+    def put(self, request, teacher_id):
+        teacher = get_object_or_404(Worker, id=teacher_id)
+        serializer = CreateWorkerSerializer(teacher, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': True, 'detail': "Teacher account updated"}, status=status.HTTP_200_OK)
+        return Response({'status': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
