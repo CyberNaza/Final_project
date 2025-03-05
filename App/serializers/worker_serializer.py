@@ -66,3 +66,14 @@ class CreateWorkerSerializer(serializers.ModelSerializer):
 
         return teacher
 
+
+
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Departments
+        fields = ['id', 'title', 'is_active', 'descriptions']
+    
+    def create(self, validated_data):
+        return Departments.objects.create(**validated_data)

@@ -82,3 +82,14 @@ class GroupSerializer(serializers.ModelSerializer):
             group.teacher.set(teacher)
 
         return group
+
+
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'title', 'descriptions']
+    
+    def create(self, validated_data):
+        return Course.objects.create(**validated_data)

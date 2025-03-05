@@ -2,10 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from ..models import Group
-from ..serializers import GroupSerializer
-from drf_spectacular.utils import extend_schema
+from ..models import Group, Departments
+from ..serializers import GroupSerializer, DepartmentSerializer, CourseSerializer
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import generics
 
 
 
@@ -93,3 +93,19 @@ class TableRetrieveUpdateDestroyView(APIView):
             return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         table.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+class DepartmentListCreateView(generics.ListCreateAPIView):
+    queryset = Departments.objects.all()
+    serializer_class = DepartmentSerializer
+
+
+
+class CourseListCreateView(generics.ListCreateAPIView):
+    queryset = Departments.objects.all()
+    serializer_class = CourseSerializer
+
+
+

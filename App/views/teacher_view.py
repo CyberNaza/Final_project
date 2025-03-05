@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import PageNumberPagination
 from ..models import User, Worker
-from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, CreateWorkerSerializer
+from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, CreateWorkerSerializer, CourseSerializer
 from rest_framework.permissions import IsAdminUser
 
 class TeacherApiView(APIView):
@@ -28,4 +28,17 @@ class TeacherApiView(APIView):
     def get(self, request):
         teachers = Worker.objects.all()
         serializer = WorkerSerializer(teachers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+class WorkerCoursesAPIView(APIView):
+    def get(self, request, worker_id):
+        worker = get_object_or_404(Worker, id=worker_id)
+        courses = worker.course.all()
+        serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
