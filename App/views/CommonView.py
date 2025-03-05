@@ -1,9 +1,11 @@
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import ListAPIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from ..models import Group, Departments
-from ..serializers import GroupSerializer, DepartmentSerializer, CourseSerializer
+from ..serializers import GroupSerializer, DepartmentSerializer, CourseSerializer, CreateStudentSerializer
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 
@@ -107,5 +109,9 @@ class CourseListCreateView(generics.ListCreateAPIView):
     queryset = Departments.objects.all()
     serializer_class = CourseSerializer
 
+
+
+# class StatusView(APIView):
+#     def get(seld, )
 
 

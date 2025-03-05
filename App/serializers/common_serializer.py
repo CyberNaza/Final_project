@@ -1,6 +1,6 @@
 from django.forms import ValidationError
 from rest_framework import serializers
-from ..models import Student, Parents, User, Group, Worker, Table, Course, TableType, Rooms
+from ..models import Student, Parents, User, Group, Worker, Table, Course, TableType, Rooms, Student
 from django.shortcuts import get_object_or_404
 from ..models.group import Table
 from rest_framework import serializers
@@ -93,3 +93,7 @@ class CourseSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return Course.objects.create(**validated_data)
+
+
+
+
