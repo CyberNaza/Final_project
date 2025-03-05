@@ -4,7 +4,6 @@ from rest_framework import filters
 
 from .auth import User
 
-
 # Markazda oqitiladigan fanlar
 class Course(models.Model):
     title = models.CharField(max_length=50)

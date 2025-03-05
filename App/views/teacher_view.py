@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.pagination import PageNumberPagination
-from ..models import User, Worker
-from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, CreateWorkerSerializer, CourseSerializer
+from ..models import User, Worker, Group
+from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, CreateWorkerSerializer, CourseSerializer, GroupSerializer
 from rest_framework.permissions import IsAdminUser
 
 class TeacherApiView(APIView):
@@ -31,7 +31,6 @@ class TeacherApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-  
     @swagger_auto_schema(request_body=CreateWorkerSerializer)
     def put(self, request, teacher_id):
         teacher = get_object_or_404(Worker, id=teacher_id)
@@ -42,13 +41,15 @@ class TeacherApiView(APIView):
         return Response({'status': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-class WorkerCoursesAPIView(APIView):
+class WorkerGroupsAPIView(APIView):
     def get(self, request, worker_id):
-        worker = get_object_or_404(Worker, id=worker_id)
-        courses = worker.course.all()
-        serializer = CourseSerializer(courses, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            worker = Worker.objects.get(id=worker_id)
+
+            groups = Group.objects.filter(teacher=worker)
+
+            serializer = GroupSerializer(groups, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Worker.DoesNotExist:
+            return Response({"error": "Worker not found"}, status=status.HTTP_404_NOT_FOUND)
