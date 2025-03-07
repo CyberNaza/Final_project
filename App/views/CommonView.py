@@ -4,10 +4,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from ..models import Group, Departments
-from ..serializers import GroupSerializer, DepartmentSerializer, CourseSerializer, CreateStudentSerializer
+from ..models import Group, Departments, Student
+from ..serializers import GroupSerializer, DepartmentSerializer, CourseSerializer, CreateStudentSerializer, DateRangeSerializer
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
+from rest_framework import serializers
+from rest_framework.decorators import api_view
+from datetime import datetime
+from collections import defaultdict
 
 
 
@@ -111,7 +115,32 @@ class CourseListCreateView(generics.ListCreateAPIView):
 
 
 
-# class StatusView(APIView):
-#     def get(seld, )
+class StudentsByRegistrationView(APIView):
+    @swagger_auto_schema(request_body=DateRangeSerializer)
+    def post(self, request):
+        serializer = DateRangeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        start_date = datetime.combine(serializer.validated_data['start_date'], datetime.min.time())
+        end_date = datetime.combine(serializer.validated_data['end_date'], datetime.max.time())
+        
+        students = Student.objects.filter(created__range=[start_date, end_date]).prefetch_related('course')
+        is_studying = Student.objects.filter(is_line=True).count()
+        is_compleated = Student.objects.filter(is_finished=True).count()
+
+        
+        course_summary = defaultdict(int)
+        for student in students:
+            for course in student.course.all():
+                course_summary[course.title] += 1
 
 
+        response_data = {
+            'registered_by_course': [{ 'course': course, 'student_count': count } for course, count in course_summary.items()],
+            'studying': is_studying,
+            'compleated': is_compleated,
+        }
+
+
+        return Response(response_data, status=status.HTTP_200_OK)

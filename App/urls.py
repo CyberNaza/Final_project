@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views.teacher_view import TeacherApiView
 from .views.student_view import StudentApiView
-from .views import GroupView
+from .views import GroupView, StudentsByRegistrationView
 from .views import TableListCreateView, TableRetrieveUpdateDestroyView, DepartmentListCreateView, CourseListCreateView, WorkerGroupsAPIView
 urlpatterns = [
     path("workers/create/", TeacherApiView.as_view(), name='teacher-api'),
@@ -9,6 +9,8 @@ urlpatterns = [
     path('teachers/<int:teacher_id>/', TeacherApiView.as_view(), name='teacher-update'),
     path('students/<int:student_id>/', StudentApiView.as_view(), name='student-update'),
 
+
+    path('status/', StudentsByRegistrationView.as_view(), name='studentbyregister'),
 
     path('groups/', GroupView.as_view()), 
     path('groups/<int:group_id>/', GroupView.as_view()),

@@ -8,6 +8,7 @@ class Student(models.Model):
     group = models.ManyToManyField('Group', related_name='student')
     course = models.ManyToManyField(Course, related_name='student')
     is_line = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     descriptions = models.CharField(max_length=500, blank=True, null=True)
