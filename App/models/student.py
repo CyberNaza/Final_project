@@ -14,7 +14,7 @@ class Student(models.Model):
     descriptions = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return self.user.phone
+        return f"{self.user.phone} | {self.user.id}"
 
 
 #

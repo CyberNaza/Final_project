@@ -43,7 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.phone
+        return f"{self.phone} | {self.id}"
 
     def has_perm(self, perm, obj=None):
         return self.is_admin

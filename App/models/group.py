@@ -35,7 +35,7 @@ class Table(models.Model):
     type = models.ForeignKey(TableType, on_delete=models.RESTRICT)
     descriptions = models.CharField(max_length=500, blank=True, null=True)
     def __str__(self):
-          return f"ID: {self.id} | ".__str__()
+          return f"ID: {self.id} | {self.start_time} - {self.end_time}".__str__()
 
 class Group(models.Model):
     title = models.CharField(max_length=50, unique=True)
