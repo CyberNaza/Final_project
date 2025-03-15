@@ -35,7 +35,7 @@ urlpatterns = [
     # path('auth/token/refresh/', TokenRefreshView.as_view(), name='auth_token_refresh'),
     path('', include(router.urls)),
 
-    # path('status/', StudentsByRegistrationView.as_view(), name='studentbyregister'),
+    path('status/', StudentsByRegistrationView.as_view(), name='studentbyregister'),
 
     path('groups/', GroupView.as_view(), name='group-list'),
     path('groups/<int:group_id>/', GroupView.as_view(), name='group-detail'),
