@@ -4,4 +4,4 @@ from .student import *
 from .group import *
 from .homework import *
 from .attendance import *
-
+from .paymant import *

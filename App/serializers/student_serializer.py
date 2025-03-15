@@ -38,31 +38,29 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class ParentsSerializer(serializers.ModelSerializer):
-    student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all(), required=True) 
+    student = serializers.PrimaryKeyRelatedField(queryset=Student.objects.all())
 
     class Meta:
         model = Parents
-        fields = ['student', 'full_name', 'phone_number', 'address', 'descriptions']
+        fields = '__all__'
 
-    def create(self, validated_data):
-        student = validated_data.get('student')
 
-        # Ensure no duplicate parents for a student
-        if Parents.objects.filter(student=student).exists():
-            raise serializers.ValidationError({"student": "This student already has a parent assigned."})
-
-        return Parents.objects.create(**validated_data)
 
 class CreateStudentSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(write_only=True, required=True)
     password = serializers.CharField(write_only=True, required=True)  
     full_name = serializers.CharField(write_only=True, required=False, allow_blank=True) 
+    
+    read_full_name = serializers.CharField(source='user.full_name', read_only=True)  # Read-only full_name
+    read_phone = serializers.CharField(source='user.phone', read_only=True)  # Read-only phone
+
     group = serializers.ListField(child=serializers.IntegerField(), write_only=True)  
     course = serializers.ListField(child=serializers.IntegerField(), write_only=True) 
 
     class Meta:
         model = Student
-        fields = ['phone', 'password', 'full_name', 'is_line', 'descriptions', 'group', 'course']
+        fields = ['id', 'phone', 'password', 'full_name', 'read_full_name', 'read_phone', 'is_line', 'descriptions', 'group', 'course']
+
 
     def create(self, validated_data):
         phone = validated_data.pop('phone')

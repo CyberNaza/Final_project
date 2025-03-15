@@ -78,7 +78,7 @@ class CreateWorkerSerializer(serializers.ModelSerializer):
         # Update User fields
         user.phone = phone
         if password:
-            user.set_password(password)  # Hash password if provided
+            user.set_password(password)  
         user.full_name = full_name
         user.save()
 
@@ -97,6 +97,14 @@ class CreateWorkerSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class WorkerSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(source='user.phone', read_only=True)
+    full_name = serializers.CharField(source='user.full_name', read_only=True)
+    is_teacher = serializers.BooleanField(source='user.is_teacher', read_only=True)
+
+    class Meta:
+        model = Worker
+        fields = ['id', 'phone', 'full_name', 'is_teacher', 'departments', 'course']
 
 
 class DepartmentSerializer(serializers.ModelSerializer):

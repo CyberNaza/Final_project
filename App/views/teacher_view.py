@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, filters
+from rest_framework import status, filters, viewsets
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
@@ -10,6 +10,7 @@ from ..serializers import WorkerSerializer, UserSerializer, auth_serializer, Cre
 from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import action
 
 class TeacherPagination(PageNumberPagination):
     page_size = 10 
@@ -52,25 +53,36 @@ class TeacherPagination(PageNumberPagination):
 
 
 
-
-class TeacherApiViewSet(ModelViewSet):
-    queryset = Worker.objects.all()
-    serializer_class = CreateWorkerSerializer
+class TeacherApiViewSet(viewsets.ModelViewSet):
+    queryset = Worker.objects.filter(user__is_teacher=True)
     permission_classes = [IsAdminUser]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['user__phone', 'user__full_name']
-    pagination_class = TeacherPagination
+    pagination_class = TeacherPagination  
 
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return WorkerSerializer
+        return CreateWorkerSerializer
 
+    @action(detail=False, methods=['get'])
+    def teacher_list(self, request):
+        """
+        Custom endpoint to return only teachers where user.is_teacher=True
+        """
+        teachers = Worker.objects.filter(user__is_teacher=True)
 
+        page = self.paginate_queryset(teachers)
+        if page is not None:
+            serializer = WorkerSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-
-
-
-
-
+        serializer = WorkerSerializer(teachers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class WorkerGroupsAPIView(APIView):
+    permission_classes = [IsAdminUser]
+    
     def get(self, request, worker_id):
         try:
             worker = Worker.objects.get(id=worker_id)

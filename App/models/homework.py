@@ -23,9 +23,16 @@ class GroupHomeWork(models.Model):
 
 class HomeWork(models.Model):
     groupHomeWork = models.ForeignKey(GroupHomeWork, on_delete=models.RESTRICT)
-    price = models.CharField(max_length=5, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.RESTRICT)
     link = models.URLField()
     is_active = models.BooleanField(default=False)
     descriptions = models.CharField(max_length=500, blank=True, null=True)
 
+class Baho(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    homework = models.OneToOneField(GroupHomeWork, on_delete=models.CASCADE)
+    score = models.IntegerField()
+    comment = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.student} - {self.score}"

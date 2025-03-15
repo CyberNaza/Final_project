@@ -1,9 +1,10 @@
 from django.forms import ValidationError
 from rest_framework import serializers
-from ..models import Student, Parents, User, Group, Worker, Table, Course, TableType, Rooms, Student
+from ..models import Student, Parents, User, Group, Worker, Table, Course, TableType, Rooms, Student, Topics, GroupHomeWork, HomeWork, Baho, Month, Payment
 from django.shortcuts import get_object_or_404
 from ..models.group import Table
 from rest_framework import serializers
+from ..models import AttendanceLevel, Attendance
 
 
 
@@ -108,3 +109,57 @@ class StudentSerializer(serializers.ModelSerializer):
 class DateRangeSerializer(serializers.Serializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
+
+
+
+class AttendanceLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceLevel
+        fields = '__all__'
+
+class AttendanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Attendance
+        fields = ['id', 'level', 'level_id', 'created', 'updated', 'student', 'group']
+
+
+
+
+class TopicsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topics
+        fields = '__all__'
+
+
+class GroupHomeWorkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupHomeWork
+        fields = '__all__'
+
+
+class HomeWorkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeWork
+        fields = '__all__'
+
+
+class BahoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Baho
+        fields = '__all__'
+        
+        
+        
+        
+class MonthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Month
+        fields = '__all__'
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
